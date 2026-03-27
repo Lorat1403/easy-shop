@@ -1,0 +1,25 @@
+<div class="info-container">
+  <h2 class="info-container__title">Register to Easy Shop</h2>
+  <div class="info-container__card">
+    <form (ngSubmit)="onRegister()">
+      <div class="field-group">
+        <label>Email*</label>
+        <input type="email" [(ngModel)]="email" name="email" required />
+      </div>
+
+      <div class="field-group">
+        <label>Password*</label>
+        <input type="password" [(ngModel)]="pass" name="pass" required />
+      </div>
+
+      <button type="submit" class="all-btn all-btn__submit" [disabled]="!email || pass.length < 6">
+        Register
+      </button>
+    </form>
+
+    @if (error) {
+      <p class="error-msg">{{ error }}</p>
+    }
+  </div>
+  <p class="switch-auth">Do you have an account?<a routerLink="/login">Login</a></p>
+</div>

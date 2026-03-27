@@ -1,0 +1,51 @@
+<div
+  class="product-card"
+  [ngClass]="'product-card--' + getThemeColor()"
+  [class.product-card--featured]="isFeatured"
+>
+  @if (product.discount > 0) {
+    <div class="product-card__discount">{{ product.discount }}%<br />off</div>
+  }
+
+  <div class="product-card__img-container">
+    <img [src]="product.imgUrl" [alt]="product.name" class="product-card__image" />
+  </div>
+
+  <div class="product-card__info">
+    <div class="product-card__price-row">
+      <div class="product-card__price-container">
+        <span class="product-card__current-price">{{
+          product.price * (1 - (product.discount || 0) / 100) | euroCurrency
+        }}</span>
+
+        @if (product.discount > 0) {
+          <span class="product-card__old-price">
+            {{ product.price | euroCurrency }}
+          </span>
+        }
+      </div>
+
+      <span class="product-card__shop">{{ product.shop }}</span>
+    </div>
+    <h3 class="product-card__title">{{ product.name }}</h3>
+    <p class="product-card__description" [title]="product.description">
+      {{ product.description | truncate: 35 }}
+    </p>
+
+    <div class="product-card__footer">
+      <span>{{ product.isNew ? 'New' : 'Used' }}</span>
+      <div class="product-card__btn-div">
+        @if (authService.user$ | async; as user) {
+          @if (user.role === 'admin' || user.role === 'owner') {
+            <button class="product-card__detail-btn" [routerLink]="['/edit-product', product.id]">
+              Edit Details
+            </button>
+          }
+        }
+        <button class="product-card__detail-btn" [routerLink]="['/product', product.id]">
+          View Details
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

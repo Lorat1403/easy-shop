@@ -1,0 +1,77 @@
+<div class="cart-modal-overlay" (click)="closeModal()">
+  <div class="cart-modal" (click)="$event.stopPropagation()">
+    <div class="cart-modal__header">
+      <h2 class="cart-modal__title">Cart</h2>
+      <button class="cart-modal__close-btn" (click)="closeModal()">&times;</button>
+    </div>
+
+    <div class="cart-modal__body">
+      @for (item of cartService.cartItems$ | async; track $index) {
+        <div class="cart-item">
+          <div>
+            <h4 class="cart-item__name">{{ item.name }}</h4>
+            <p class="cart-item__specs">
+              Color: <span>{{ item.selectedColor }}</span
+              >, Size: <span>{{ item.selectedSize }}</span>
+            </p>
+            <p class="cart-item__specs">
+              Quantity: <span>{{ item.quantity }}</span>
+            </p>
+            <div class="qty-selector">
+              <button type="button" (click)="cartService.updateItemQty($index, -1)" class="qty-btn">
+                -
+              </button>
+              <span class="qty-value">{{ item.quantity }}</span>
+              <button type="button" (click)="cartService.updateItemQty($index, 1)" class="qty-btn">
+                +
+              </button>
+            </div>
+          </div>
+
+          <div class="cart-item__pricing">
+            <div class="cart-item__price">
+              {{ item.price * (1 - item.discount / 100) | euroCurrency }}
+            </div>
+            @if (item.discount) {
+              <div class="cart-item__old-price">
+                {{ item.price | euroCurrency }}
+              </div>
+            }
+            for 1 unit
+          </div>
+          <button class="cart-item__delete" (click)="removeItem($index)" title="Видалити">
+            <span class="material-icons">delete_outline</span>
+          </button>
+        </div>
+      } @empty {
+        <p class="cart-modal__empty">The cart is empty</p>
+      }
+    </div>
+
+    @if ((cartService.cartCount$ | async) ?? 0 > 0) {
+      <div class="cart-modal__footer">
+        @if (!(authService.user$ | async)) {
+          <p class="error-msg">Please log in to place an order</p>
+        }
+        <div class="cart-modal__total-row">
+          <span class="cart-modal__total-label">Total:</span>
+          <span class="cart-modal__total-value">
+            {{ cartService.getTotalPrice() | euroCurrency }}
+          </span>
+        </div>
+        <div class="cart-modal__actions">
+          <button type="button" routerLink="/products" class="all-btn" (click)="closeModal()">
+            Return to products
+          </button>
+          <button
+            class="all-btn all-btn__submit"
+            [disabled]="!(authService.user$ | async)"
+            (click)="submitOrder()"
+          >
+            Place an order
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

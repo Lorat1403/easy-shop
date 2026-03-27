@@ -1,0 +1,46 @@
+<header class="main-header">
+  <div class="logo">
+    <a routerLink="/" routerLinkActive="active">EASY<b>SHOP</b></a>
+  </div>
+
+  <button class="menu-toggle" (click)="isMenuOpen = !isMenuOpen">
+    <span class="material-icons">{{ isMenuOpen ? 'close' : 'menu' }}</span>
+  </button>
+
+  <nav [class.open]="isMenuOpen">
+    <a href="javascript:void(0)" (click)="openCart()" class="cart-link">
+      <span class="material-icons">shopping_cart</span>
+      @if ((cartService.cartCount$ | async) ?? 0 > 0) {
+        <span class="cart-badge">{{ cartService.cartCount$ | async }}</span>
+      }
+    </a>
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+      >PRODUCTS</a
+    >
+    <a routerLink="/contacts" routerLinkActive="active">CONTACTS</a>
+    @if ((authService.user$ | async)?.role === 'admin') {
+      <a routerLink="/add-product" routerLinkActive="active">ADD ITEM</a>
+    }
+
+    @if (authService.user$ | async; as user) {
+      <div class="user-info">
+        @if (user.photoURL) {
+          <img
+            [src]="user.photoURL"
+            alt="User Avatar"
+            class="user-avatar"
+            referrerpolicy="no-referrer"
+          />
+        }
+        <span class="user-email">{{ user.displayName || user.email }}</span>
+        <a href="javascript:void(0)" (click)="logout()" style="font-weight: 300">Logout</a>
+      </div>
+    } @else {
+      <a routerLink="/login" routerLinkActive="active">LOGIN</a>
+    }
+  </nav>
+</header>
+
+@if (isCartModalOpen) {
+  <app-cart-modal (close)="isCartModalOpen = false"></app-cart-modal>
+}

@@ -1,0 +1,130 @@
+@if (product$ | async; as product) {
+  <div class="product-details">
+    <button class="product-details__return-btn" routerLink="/">
+      <span class="material-icons">arrow_back </span>Return to Products
+    </button>
+
+    <div class="product-details__grid">
+      <div class="product-details__visuals">
+        <div class="product-details__image-main">
+          <img class="product-details__image" [src]="product.imgUrl" [alt]="product.name" />
+          <span class="product-details__zoom-label">+ zoom</span>
+        </div>
+
+        <div class="product-details__thumbnails">
+          @for (thumb of [1, 2]; track $index) {
+            <img
+              [src]="product.imgUrl"
+              class="product-details__thumb"
+              [class.product-details__thumb--active]="$first"
+            />
+          }
+        </div>
+      </div>
+
+      <div class="product-details__info">
+        <h1 class="product-details__title">{{ product.name }}</h1>
+        <p class="product-details__text">{{ product.description | truncate: 150 }}</p>
+        <div class="product-details__price-tag">
+          {{ product.price * (1 - product.discount / 100) | euroCurrency }}
+        </div>
+
+        <div class="product-details__rating-row">
+          <div class="product-details__stars">
+            @for (star of [1, 2, 3, 4, 5]; track $index) {
+              <span
+                class="material-icons"
+                [style.color]="$index < (product.review[0]?.rating || 0) ? '#ff9800' : '#ccc'"
+              >
+                star
+              </span>
+            }
+            <span class="product-details__rating-count">({{ product.review.length }})</span>
+          </div>
+        </div>
+
+        <div class="product-details__reviews-actions">
+          <div class="product-details__rating-summary">
+            <a (click)="scrollToReviews(reviewsList)" class="product-details__link"
+              >Read {{ product.review.length }} reviews</a
+            >
+          </div>
+          <a (click)="scrollToReviews(reviewsList)" class="product-details__link">Write a review</a>
+        </div>
+
+        <form>
+          <div class="product-details__field">
+            <label class="product-details__label">Color</label>
+            <select
+              class="product-details__select"
+              (change)="selectColor($any($event.target).value)"
+            >
+              <option value="" disabled [selected]="!selectedColor">Select Color</option>
+              @for (c of product.color; track c) {
+                <option [value]="c" [selected]="selectedColor === c">{{ c }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="product-details__field">
+            <label class="product-details__label">Size</label>
+            <select
+              class="product-details__select"
+              (change)="selectSize($any($event.target).value)"
+            >
+              <option value="" disabled [selected]="!selectedSize">Select Size</option>
+              @for (s of product.size; track s) {
+                <option [value]="s" [selected]="selectedSize === s">{{ s }}</option>
+              }
+            </select>
+          </div>
+          @if (showError) {
+            <small class="error-msg product-details__error">
+              Please, select color and size before adding to cart
+            </small>
+          }
+          <div class="product-details__purchase-zone">
+            <div class="qty-selector">
+              <button type="button" (click)="changeQty(-1)" class="qty-btn">-</button>
+              <span class="qty-value">{{ quantity }}</span>
+              <button type="button" (click)="changeQty(1)" class="qty-btn">+</button>
+            </div>
+            <div class="product-details__cta-buttons">
+              <button type="button" class="all-btn" (click)="addToCart(product)">
+                <span class="material-icons">shopping_cart</span> Add to cart
+              </button>
+
+              <button class="all-btn">
+                <span class="material-icons">edit</span> Add to wishlist
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div #reviewsList class="product-reviews">
+      <h2 class="product-reviews__title">Customer Reviews</h2>
+
+      @for (r of product.review; track r.author + $index) {
+        <div class="product-reviews__item">
+          <div class="product-reviews__header">
+            <strong class="product-reviews__author">{{ r.author }}</strong>
+            <div class="product-reviews__stars">
+              @for (star of [1, 2, 3, 4, 5]; track $index) {
+                <span class="material-icons" [style.color]="$index < r.rating ? '#ff9800' : '#ccc'">
+                  star
+                </span>
+              }
+            </div>
+          </div>
+          <p class="product-reviews__comment">{{ r.text }}</p>
+        </div>
+      } @empty {
+        <p class="product-reviews__empty">No reviews yet. Be the first to write one!</p>
+      }
+    </div>
+  </div>
+} @else {
+  <div class="loading">Завантаження товару...</div>
+}

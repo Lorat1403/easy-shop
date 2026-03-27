@@ -1,0 +1,112 @@
+<div class="product-container">
+  @if (showModal) {
+    <div class="custom-modal-overlay">
+      <div class="custom-modal">
+        <h3>{{ modalConfig.title }}</h3>
+        <p>{{ modalConfig.message }}</p>
+        <div class="modal-actions">
+          <button class="all-btn" (click)="closeModal()">Cancel</button>
+          <button class="all-btn all-btn__submit" (click)="modalConfig.action()">Confirm</button>
+        </div>
+      </div>
+    </div>
+  }
+  <div class="product-form">
+    <header class="product-form__header">
+      <h2 class="product-form__title">Edit Product</h2>
+      <p class="product-form__text">Update the details of the existing item in the shop</p>
+    </header>
+
+    <form [formGroup]="productForm">
+      <div class="product-layout">
+        <div class="product-input-group">
+          <label>Image Preview</label>
+          <div class="preview-box">
+            @if (productForm.get('imgUrl')?.value) {
+              <p-image
+                [src]="productForm.get('imgUrl')?.value || ''"
+                alt="Product"
+                width="100%"
+                [preview]="true"
+              ></p-image>
+            } @else {
+              <div class="preview-box__placeholder">Enter URL to see preview</div>
+            }
+          </div>
+          <div class="input-group">
+            <input formControlName="imgUrl" placeholder="Image URL (https://...)" />
+          </div>
+        </div>
+
+        <div class="fields-section">
+          <div class="product-input-group">
+            <label>Product Name</label>
+            <input formControlName="name" placeholder="e.g. Mountain Bike Pro" />
+          </div>
+
+          <div class="row">
+            <div class="product-input-group">
+              <label>Price (EUR)</label>
+              <input type="number" formControlName="price" />
+            </div>
+            <div class="product-input-group">
+              <label>Discount (%)</label>
+              <input type="number" formControlName="discount" />
+              @if (productForm.get('discount')?.errors?.['max']) {
+                <small class="error-msg">Discount cannot exceed 75%</small>
+              }
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="product-input-group">
+              <label>Choose Colors</label>
+              <select formControlName="color" multiple class="multi-select">
+                @for (c of availableColors; track c) {
+                  <option class="multi-select__option" [value]="c">{{ c }}</option>
+                }
+              </select>
+              <small class="hint">Hold Ctrl to select multiple</small>
+            </div>
+            <div class="product-input-group">
+              <label>Choose Sizes</label>
+              <select formControlName="size" multiple class="multi-select">
+                @for (s of availableSizes; track s) {
+                  <option class="multi-select__option" [value]="s">{{ s }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="product-input-group">
+            <label>Description</label>
+            <textarea formControlName="description"></textarea>
+          </div>
+
+          <div class="checkbox-group">
+            <label>
+              <input type="checkbox" formControlName="isNew" />
+              Mark as "New Arrival"
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <footer class="product-actions">
+        <button type="button" class="all-btn all-btn__delete" (click)="openDeleteModal()">
+          Delete Product
+        </button>
+        <button type="button" class="all-btn all-btn__cancel" (click)="goBack()">Cancel</button>
+
+        <button
+          type="submit"
+          class="all-btn all-btn__submit"
+          [disabled]="productForm.invalid"
+          (click)="openUpdateModal()"
+        >
+          Save Changes
+        </button>
+      </footer>
+    </form>
+  </div>
+</div>

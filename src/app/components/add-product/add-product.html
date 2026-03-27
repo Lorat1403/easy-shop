@@ -1,0 +1,88 @@
+<div class="add-product-container">
+  <div class="form-card">
+    <header class="form-header">
+      <h2>Add New Product</h2>
+      <p>Fill in the details to list a new item in the shop</p>
+    </header>
+
+    <form [formGroup]="productForm" (ngSubmit)="submit()">
+      <div class="form-layout">
+        <div class="input-group">
+          <label>Image Preview</label>
+          <div class="preview-box">
+            @if (productForm.get('imgUrl')?.value) {
+              <p-image
+                [src]="productForm.get('imgUrl')?.value || ''"
+                alt="Product"
+                width="100%"
+                [preview]="true"
+              ></p-image>
+            } @else {
+              <div class="placeholder">Enter URL to see preview</div>
+            }
+          </div>
+          <div class="input-group">
+            <input formControlName="imgUrl" placeholder="Image URL (https://...)" />
+          </div>
+        </div>
+
+        <div class="fields-section">
+          <div class="input-group">
+            <label>Product Name</label>
+            <input formControlName="name" placeholder="e.g. Mountain Bike Pro" />
+          </div>
+
+          <div class="row">
+            <div class="input-group">
+              <label>Price (EUR)</label>
+              <input type="number" formControlName="price" />
+            </div>
+            <div class="input-group">
+              <label>Discount (%)</label>
+              <input type="number" formControlName="discount" />
+              @if (productForm.get('discount')?.errors?.['max']) {
+                <small class="error-msg">Discount cannot exceed 75%</small>
+              }
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="input-group">
+              <label> Choose Colors</label>
+              <select formControlName="color" multiple class="multi-select">
+                @for (c of availableColors; track c) {
+                  <option class="multi-select__option" [value]="c">{{ c }}</option>
+                }
+              </select>
+              <small class="hint">Hold Ctrl to select multiple</small>
+            </div>
+            <div class="input-group">
+              <label>Choose Sizes</label>
+              <select formControlName="size" multiple class="multi-select">
+                @for (s of availableSizes; track s) {
+                  <option class="multi-select__option" [value]="s">{{ s }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Description</label>
+            <textarea formControlName="description"></textarea>
+          </div>
+
+          <div class="checkbox-group">
+            <label> <input type="checkbox" formControlName="isNew" /> Mark as "New Arrival" </label>
+          </div>
+        </div>
+      </div>
+
+      <footer class="form-actions">
+        <button type="button" class="all-btn" routerLink="/">Cancel</button>
+        <button type="submit" class="all-btn all-btn__submit" [disabled]="productForm.invalid">
+          Create Product
+        </button>
+      </footer>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,5 @@
+<div class="product-grid">
+  @for (item of products$ | async; track item.id; let first = $first) {
+    <app-product-card [product]="item" [isFeatured]="first"> </app-product-card>
+  }
+</div>

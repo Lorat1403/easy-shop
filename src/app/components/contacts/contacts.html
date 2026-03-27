@@ -1,0 +1,51 @@
+<div class="info-container">
+  @if (isThanksPage) {
+    <div class="info-container__card">
+      <h1 class="info-container__title">Thank you for ordering!</h1>
+      <button class="submit-btn" routerLink="/products">Back to Products</button>
+    </div>
+  } @else {
+    <h1 class="info-container__title">Contact us</h1>
+    <div class="info-container__card">
+      <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contacts-form">
+        <div class="field-group">
+          <label for="firstName">First Name*</label>
+          <input id="firstName" formControlName="firstName" placeholder="Your first name" />
+          @if (contactForm.get('firstName')?.invalid && contactForm.get('firstName')?.touched) {
+            <span class="error-msg">This field is required</span>
+          }
+        </div>
+
+        <div class="field-group">
+          <label for="lastName">Last Name*</label>
+          <input id="lastName" formControlName="lastName" placeholder="Your last name" />
+          @if (contactForm.get('lastName')?.invalid && contactForm.get('lastName')?.touched) {
+            <span class="error-msg">This field is required</span>
+          }
+        </div>
+
+        <div class="field-group">
+          <label for="email">Email*</label>
+          <input id="email" type="email" formControlName="email" placeholder="example@mail.com" />
+          @if (contactForm.get('email')?.invalid && contactForm.get('email')?.touched) {
+            <span class="error-msg">This field is required</span>
+          }
+        </div>
+
+        <div class="field-group">
+          <label for="description">Description*</label>
+          <textarea
+            id="description"
+            formControlName="description"
+            placeholder="How can we help you?"
+          ></textarea>
+          @if (contactForm.get('description')?.invalid && contactForm.get('description')?.touched) {
+            <span class="error-msg">This field is required</span>
+          }
+        </div>
+
+        <button type="submit" class="submit-btn" [disabled]="contactForm.invalid">Send</button>
+      </form>
+    </div>
+  }
+</div>

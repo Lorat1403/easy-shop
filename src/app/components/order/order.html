@@ -1,0 +1,136 @@
+<div class="stepper-container">
+  <div class="steps-header">
+    <p>Step {{ currentStep }} of 4</p>
+  </div>
+
+  <form [formGroup]="orderForm" (ngSubmit)="submit()">
+    @switch (currentStep) {
+      @case (1) {
+        <div formGroupName="step1">
+          <h3>Delivery Address</h3>
+
+          @if (!isCartEmpty) {
+            <input formControlName="country" id="country" placeholder="Country" />
+            <input formControlName="city" id="city" placeholder="City" />
+            <input formControlName="address" id="address" placeholder="Street, House Number" />
+          }
+
+          @if (isCartEmpty) {
+            <div class="empty-cart-action">
+              <p>It seems you haven't added anything yet.</p>
+              <button type="button" routerLink="/products" class="btn-return">
+                <span class="material-icons">arrow_back</span>
+                Go to shop
+              </button>
+            </div>
+          }
+        </div>
+      }
+
+      @case (2) {
+        <div formGroupName="step2">
+          <h3>Payment Method</h3>
+          <label for="card"
+            ><input type="radio" value="card" id="card" formControlName="paymentMethod" />
+            Card</label
+          >
+          <label for="paypal"
+            ><input type="radio" value="paypal" id="paypal" formControlName="paymentMethod" />
+            PayPal</label
+          >
+          <label for="cash"
+            ><input type="radio" value="cash" id="cash" formControlName="paymentMethod" />
+            Cash</label
+          >
+        </div>
+      }
+
+      @case (3) {
+        <div formGroupName="step3">
+          <h3>Delivery Date</h3>
+          <label><input type="radio" value="today" formControlName="dateType" /> Today</label>
+          <label><input type="radio" value="tomorrow" formControlName="dateType" /> Tomorrow</label>
+          <label><input type="radio" value="calendar" formControlName="dateType" /> Calendar</label>
+
+          @if (orderForm.get('step4.dateType')?.value === 'calendar') {
+            <input type="date" formControlName="calendarDate" />
+          }
+        </div>
+      }
+
+      @case (4) {
+        <div class="summary">
+          <h3>Confirmation</h3>
+          <div class="summary__details">
+            <div class="summary__order-list">
+              @for (item of products$ | async; track item.id) {
+                <div class="summary__item">
+                  <div class="item-info">
+                    <span>{{ item.name }}</span>
+                    <p class="item-specs">
+                      Color: <span>{{ item.selectedColor }}</span
+                      >, Size: <span>{{ item.selectedSize }}</span>
+                    </p>
+                    <span>(x {{ item.quantity ?? 1 }}) items</span>
+                  </div>
+                  <strong>{{
+                    item.price * (item.quantity ?? 1) | currency: 'EUR' : 'symbol'
+                  }}</strong>
+                </div>
+              }
+            </div>
+
+            <div class="summary__item">
+              <span>Address:</span>
+              <strong>
+                {{ orderForm.value.step1?.country }}, {{ orderForm.value.step1?.city }},
+                {{ orderForm.value.step1?.address }}
+              </strong>
+            </div>
+
+            <div class="summary__item">
+              <span>Payment Method:</span>
+              <strong>{{ orderForm.value.step2?.paymentMethod }}</strong>
+            </div>
+
+            <hr class="summary__divider" />
+
+            <div class="summary__total">
+              <span>Total Amount:</span>
+              <span class="total-price">{{ totalPrice | currency: 'EUR' : 'symbol' }}</span>
+            </div>
+          </div>
+        </div>
+      }
+    }
+
+    <div class="actions">
+      @if (currentStep > 1) {
+        <button type="button" class="all-btn" (click)="back()">Back</button>
+      }
+
+      @if (!isCartEmpty && currentStep < 4) {
+        <button
+          type="button"
+          class="all-btn"
+          (click)="next()"
+          [disabled]="orderForm.get('step' + currentStep)?.invalid"
+        >
+          Next
+        </button>
+      }
+
+      @if (currentStep === 4) {
+        <button
+          type="submit"
+          class="all-btn all-btn__submit"
+          routerLink="/thanks"
+          [disabled]="orderForm.invalid"
+          (click)="submit()"
+        >
+          Submit
+        </button>
+      }
+    </div>
+  </form>
+</div>

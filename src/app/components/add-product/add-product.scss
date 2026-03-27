@@ -1,0 +1,110 @@
+.add-product-container {
+  padding: 3rem 7%;
+  background-color: #f4f7f6;
+  min-height: 100vh;
+}
+
+.form-card {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+
+  .form-header {
+    margin-bottom: 2rem;
+
+    h2 {
+      font-size: 2rem;
+      color: #333;
+      margin: 0;
+    }
+
+    p {
+      color: #888;
+      margin-top: 5px;
+    }
+  }
+}
+
+.form-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.preview-box {
+  width: 100%;
+  margin: 16px auto;
+  aspect-ratio: 1;
+  border: 2px dashed #ddd;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #fafafa;
+
+  .placeholder {
+    color: #bbb;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 20px;
+  }
+}
+
+.input-group {
+  margin-bottom: 1.2rem;
+
+  label {
+    display: block;
+    font-weight: 600;
+    padding-left: 8px;
+    margin-bottom: 6px;
+    color: #555;
+  }
+
+  input,
+  textarea {
+    width: 97%;   
+    margin: 5px;
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    resize: vertical;
+
+    &:focus {
+      outline: none;
+      border-color: #7b2ff7;
+    }
+  }
+textarea {
+  max-height: 250px;
+  min-height: 100px;
+  }
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.hint{
+  padding-left: 8px;
+}
+
+.form-actions {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  border-top: 1px solid #eee;
+  padding-top: 2rem;
+}
