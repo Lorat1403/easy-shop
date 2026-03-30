@@ -9,7 +9,7 @@ import {
 } from '@angular/fire/firestore';
 import { Observable} from 'rxjs';
 import { Product } from '../models/product.model';
-import { PRODUCTS } from '../assets/data';
+// import { PRODUCTS } from '../assets/data';
 
 @Injectable({
   providedIn: 'root',
@@ -42,13 +42,13 @@ async removeProduct(id: string) {
   return deleteDoc(productDocRef); 
 }
 
-async migrateDataToFirebase() {
-  console.log('Міграція почалася...');
-  for (const product of PRODUCTS) {
-    const { id, ...data } = product; 
-    await addDoc(this.productsCollection, data);
-  }
-  console.log('Готово!');
-}
+// async migrateDataToFirebase() {
+//   console.log('Міграція почалася...');
+//   for (const product of PRODUCTS) {
+//     const { id, ...data } = product; 
+//     await addDoc(this.productsCollection, data);
+//   }
+//   console.log('Готово!');
+// }
 }
 
